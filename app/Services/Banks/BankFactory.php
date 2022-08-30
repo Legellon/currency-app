@@ -4,11 +4,12 @@ namespace App\Services\Banks;
 
 class BankFactory
 {
-    public static function getBankInstance(string $bankAlias): Bank
+    public static function getBankOrDefault(string $bankAlias): Bank
     {
-        return match ($bankAlias) {
-            EstonianBank::$alias => new EstonianBank(),
+        return match ($bankAlias)
+        {
             LithuanianBank::$alias => new LithuanianBank(),
+            default => new EstonianBank(),
         };
     }
 }
