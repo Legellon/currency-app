@@ -3,26 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Services\Banks\BankFactory;
-use App\Services\Banks\CurrencySource;
 use App\Services\Banks\EstonianBank;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 
 class CurrencyController extends Controller
 {
-    protected CurrencySource $source;
-
-    public function getTable(Request $request): string
+    public function getTable(Request $request): JsonResponse
     {
-        $bankAlias = $request->query('bank', EstonianBank::$alias);
+        $bank_alias = $request->query('bank', EstonianBank::$alias);
 
-        $this->setCurrencySource(
-            BankFactory::getBankInstance($bankAlias));
+        $source = BankFactory::getBankOrDefault($bank_alias);
 
-        return $this->source->getTable();
-    }
-
-    private function setCurrencySource(CurrencySource $source) {
-        $this->source = $source;
+        return response()->json($source->getJsonCurrencyTable());
     }
 }
