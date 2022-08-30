@@ -4,5 +4,8 @@ namespace App\Services\Banks;
 
 interface CurrencySource
 {
-    public function getTable(): string;
+    /**
+     * @return array{data: array}
+     */
+    public function getJsonCurrencyTable(): array;
 }
