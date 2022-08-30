@@ -10,7 +10,7 @@ class EstonianBank extends Bank
 
     public function getJsonCurrencyTable(): array
     {
-        $xml_response = Http::get(env('BANK_ESTONIAN_CURRENCY_LINK'));
+        $xml_response = Http::get(env('BANK_ESTONIAN_CURRENCY_URL'));
 
         $xml_string = simplexml_load_string($xml_response);
         $xml_like_json = json_decode(json_encode($xml_string), true);

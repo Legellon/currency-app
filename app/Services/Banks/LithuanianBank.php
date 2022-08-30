@@ -10,7 +10,7 @@ class LithuanianBank extends Bank
 
     public function getJsonCurrencyTable(): array
     {
-        $csv_response = Http::get(env('BANK_LITHUANIAN_CURRENCY_LINK'));
+        $csv_response = Http::get(env('BANK_LITHUANIAN_CURRENCY_URL'));
 
         $csv_rows = array_map('str_getcsv', explode("\n", $csv_response));
         $json = $this->getJsonCurrencyTableFromCsv($csv_rows);
