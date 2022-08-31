@@ -18,6 +18,10 @@ final class LithuanianBank extends Bank
         return ["data" => $json];
     }
 
+    /**
+     * @param array $csv_rows
+     * @return array{imported: string, currencies: array}
+     */
     private function getJsonCurrencyTableFromCsv(array $csv_rows): array
     {
         $json = ["imported" => $csv_rows[0][3]];
