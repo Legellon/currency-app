@@ -16,6 +16,8 @@ class CurrencyController extends Controller
 
         $source = BankFactory::getBankOrDefault($bank_alias);
 
-        return response()->json($source->getJsonCurrencyTable());
+        return response()->json([
+            "data" => $source->getJsonCurrencyTable()
+        ]);
     }
 }
