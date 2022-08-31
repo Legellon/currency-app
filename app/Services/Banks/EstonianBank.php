@@ -3,21 +3,40 @@
 namespace App\Services\Banks;
 
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
 
 final class EstonianBank extends Bank
 {
     public static string $alias = "estonian_bank";
 
+    private string $currency_table_key;
+
+    public function __construct()
+    {
+        $this->currency_table_key = self::$alias . ":currency_table";
+    }
+
     public function getJsonCurrencyTable(): array
     {
-        $xml_response = Http::get(env('BANK_ESTONIAN_CURRENCY_URL'));
+        $currency_table = Redis::get($this->currency_table_key);
 
-        $xml_string = simplexml_load_string($xml_response);
-        $xml_like_json = json_decode(json_encode($xml_string), true);
+        if (is_null($currency_table))
+        {
+            $xml_response = Http::get(env('BANK_ESTONIAN_CURRENCY_URL'));
 
-        $json = $this->prettifyJsonCurrencyTable($xml_like_json)['currencies'];
+            $xml_string = simplexml_load_string($xml_response);
+            $xml_to_json = json_decode(json_encode($xml_string), true);
 
-        return ["data" => $json];
+            $currency_table = $this->prettifyJsonCurrencyTable($xml_to_json)['currencies'];
+
+            Redis::set($this->currency_table_key, json_encode($currency_table), 'EX', 3600);
+        }
+        else
+        {
+            $currency_table = json_decode($currency_table, true);
+        }
+
+        return $currency_table;
     }
 
     /**
