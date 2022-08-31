@@ -4,7 +4,7 @@ namespace App\Services\Banks;
 
 use Illuminate\Support\Facades\Http;
 
-class LithuanianBank extends Bank
+final class LithuanianBank extends Bank
 {
     public static string $alias = "lithuanian_bank";
 
