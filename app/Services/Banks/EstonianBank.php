@@ -40,6 +40,10 @@ final class EstonianBank extends Bank
     }
 
     /**
+     * Interpolate impure JSON from XML to traditional JSON and a corresponded context
+     *
+     * You probably will want to unpack returned JSON by 'currencies' key
+     *
      * @param array $ugly_json
      * @return array{currencies: array}
      */
