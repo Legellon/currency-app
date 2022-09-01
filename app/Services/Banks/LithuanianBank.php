@@ -9,6 +9,8 @@ final class LithuanianBank extends Bank
 {
     public static string $alias = "lithuanian_bank";
 
+    private static string $currency_source_link;
+
     private static string $currency_table_key;
 
     public function __construct()
