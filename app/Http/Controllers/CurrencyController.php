@@ -10,9 +10,13 @@ use Illuminate\Routing\Controller;
 
 class CurrencyController extends Controller
 {
+    //TODO: add validation
     public function getTable(Request $request): JsonResponse
     {
-        $bank_alias = $request->query('bank', EstonianBank::$alias);
+        $bank = $request->query('bank', EstonianBank::$alias);
+        $date = $request->query('date', date("Y-m-d", strtotime("yesterday")));
+
+        $source = BankFactory::getBankOrDefault($bank);
 
         $source = BankFactory::getBankOrDefault($bank_alias);
 
