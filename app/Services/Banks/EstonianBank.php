@@ -63,14 +63,11 @@ final class EstonianBank extends Bank
             {
                 $object = self::prettifyJsonCurrencyTable($value);
 
-                if (count($object) === 1)
+                if (count($object) === 1 &&
+                    gettype($single_value = array_slice($object, 0, 1)) == 'array')
                 {
-                    $single_value = array_slice($object, 0, 1);
-                    if (gettype($single_value) === 'array')
-                    {
-                        $json = $single_value;
-                        continue;
-                    }
+                    $json = $single_value;
+                    continue;
                 }
 
                 match ($key)
