@@ -46,7 +46,11 @@ class CurrencyController extends Controller
 
         $source = BankFactory::getBankOrDefault($bank);
 
-        [$result, $error] = $source->convert($currency, $target_currency, floatval($amount), $date);
+        [$result, $error] = $source->convert(
+            $currency,
+            $target_currency,
+            floatval($amount),
+            $date);
 
         if ($error) {
             return response()->json([
