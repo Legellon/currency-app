@@ -19,4 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/concurrency', [CurrencyController::class, 'getTable']);
+Route::get('/currencies', [CurrencyController::class, 'getTable']);
+Route::get('/{currency}/convert', [CurrencyController::class, 'makeConvert']);
