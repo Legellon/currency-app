@@ -9,29 +9,34 @@ final class EstonianBank extends Bank
 {
     public static string $alias = "estonian_bank";
 
+    private static string $currency_source_link;
+
     private static string $currency_table_key;
 
     public function __construct()
     {
         self::$currency_table_key = self::$alias . ":currency_table";
+        self::$currency_source_link = env('BANK_ESTONIAN_CURRENCY_URL');
     }
 
-    public function getJsonCurrencyTable(): array
+    public function getJsonCurrencyTable(string $date): array
     {
         return getCachedOrCacheJsonFromRedis(
-            self::$currency_table_key,
-            10,
-            [self::class, 'downloadCurrencyTable']);
+            self::$currency_table_key . ":$date",
+            100,
+            fn() => self::downloadCurrencyTable($date));
     }
 
-    public static function downloadCurrencyTable(): array
+    private static function downloadCurrencyTable(string $date): array
     {
-        $xml_response = Http::get(env('BANK_ESTONIAN_CURRENCY_URL'));
+        $xml_response = Http::get(self::$currency_source_link . "&imported=$date");
 
         $xml_string = simplexml_load_string($xml_response);
         $xml_to_json = json_decode(json_encode($xml_string), true);
 
-        return self::prettifyJsonCurrencyTable($xml_to_json)['currencies'];
+        $currency_table = self::prettifyJsonCurrencyTable($xml_to_json);
+
+        return $currency_table['currencies'] ? [$currency_table['currencies'], false] : [null, true];
     }
 
     /**

@@ -14,21 +14,22 @@ final class LithuanianBank extends Bank
     public function __construct()
     {
         self::$currency_table_key = self::$alias . ":currency_table";
+        self::$currency_source_link = env('BANK_LITHUANIAN_CURRENCY_URL');
     }
 
-    public function getJsonCurrencyTable(): array
+    public function getJsonCurrencyTable(string $date): array
     {
         return getCachedOrCacheJsonFromRedis(
-            self::$currency_table_key,
-            10,
-            [self::class, 'downloadCurrencyTable']);
+            self::$currency_table_key . ":$date",
+            100,
+            fn() => self::downloadCurrencyTable($date));
     }
 
-    public static function downloadCurrencyTable(): array
+    private static function downloadCurrencyTable($date): array
     {
-        $csv_response = Http::get(env('BANK_LITHUANIAN_CURRENCY_URL'));
+        $csv_response = Http::get(self::$currency_source_link . "&dte=$date");
         $csv_rows = array_map('str_getcsv', explode("\n", $csv_response));
-        return self::getJsonCurrencyTableFromCsv($csv_rows);
+        return [self::getJsonCurrencyTableFromCsv($csv_rows), false];
     }
 
     /**
