@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Redis;
 
 function getCachedOrCacheJsonFromRedis(string $key, int $ex, $getDataFromSrc): array
 {
+    $from_cache = false;
+
     $data = Redis::get($key);
 
     if (is_null($data))
@@ -16,7 +18,8 @@ function getCachedOrCacheJsonFromRedis(string $key, int $ex, $getDataFromSrc): a
     else
     {
         $data = json_decode($data, true);
+        $from_cache = true;
     }
 
-    return $data;
+    return [$data, $from_cache];
 }

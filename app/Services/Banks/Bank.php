@@ -8,7 +8,7 @@ abstract class Bank implements CurrencyCalculator
 
     public function convert(string $from, string $to, float $amount, string $date): array
     {
-        [$currency_table, $err] = $this->getJsonCurrencyTable($date);
+        [[$currency_table, $err], $from_cache] = $this->getJsonCurrencyTable($date);
 
         if ($err)
         {
@@ -25,7 +25,7 @@ abstract class Bank implements CurrencyCalculator
 
         $exchange_rate = $to_rate / $from_rate;
 
-        return [$exchange_rate * $amount, false];
+        return [[$exchange_rate * $amount, false], $from_cache];
     }
 
     private static function findCurrencyRate(string $currency, array $currency_table): float|false {

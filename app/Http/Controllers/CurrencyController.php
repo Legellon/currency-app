@@ -18,20 +18,21 @@ class CurrencyController extends Controller
 
         $source = BankFactory::getBankOrDefault($bank);
 
-        [$result, $error] = $source->getJsonCurrencyTable($date);
+        [[$result, $err], $from_cache] = $source->getJsonCurrencyTable($date);
 
-        if ($error) {
+        if ($err) {
             return response()->json([
                 "error" => [
                     "code" => "currencies.1",
                     "message" =>
-                        "Error occurred due to the wrong json structure.".
+                        "Error occurred due to the wrong json structure. ".
                         "Most likely date is wrong or something happened with external source."
                 ],
             ]);
         }
 
         return response()->json([
+            "fromCache" => $from_cache,
             "data" => $result
         ]);
     }
@@ -46,24 +47,25 @@ class CurrencyController extends Controller
 
         $source = BankFactory::getBankOrDefault($bank);
 
-        [$result, $error] = $source->convert(
+        [[$result, $err], $from_cache] = $source->convert(
             $currency,
             $target_currency,
             floatval($amount),
             $date);
 
-        if ($error) {
+        if ($err) {
             return response()->json([
                 "error" => [
                     "code" => "convert.1",
                     "message" =>
-                        "Error occurred while processing currencies rates from the table".
+                        "Error occurred while processing currencies rates from the table ".
                         "Most likely one of the currencies is missing or has invalid alias."
                 ]
             ]);
         }
 
         return response()->json([
+            "fromCache" => $from_cache,
             "data" => [
                 "related" => $date,
                 "from" => $currency,
