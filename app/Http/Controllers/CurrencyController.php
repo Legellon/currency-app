@@ -18,10 +18,21 @@ class CurrencyController extends Controller
 
         $source = BankFactory::getBankOrDefault($bank);
 
-        $source = BankFactory::getBankOrDefault($bank_alias);
+        [$result, $error] = $source->getJsonCurrencyTable($date);
+
+        if ($error) {
+            return response()->json([
+                "error" => [
+                    "code" => "currencies.1",
+                    "message" =>
+                        "Error occurred due to the wrong json structure.".
+                        "Most likely date is wrong or something happened with external source."
+                ],
+            ]);
+        }
 
         return response()->json([
-            "data" => $source->getJsonCurrencyTable()
+            "data" => $result
         ]);
     }
 }
