@@ -33,6 +33,6 @@ abstract class Bank implements CurrencyCalculator
             strtoupper($currency),
             array_column($currency_table['currencies'], 'currency'));
 
-        return $index ? floatval($currency_table['currencies'][$index]['rate']) : false;
+        return $index !== false ? floatval($currency_table['currencies'][$index]['rate']) : false;
     }
 }
