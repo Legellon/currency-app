@@ -32,7 +32,8 @@ class CurrencyController extends Controller
         }
 
         return response()->json([
-            "fromCache" => $from_cache,
+            "cache" => $from_cache,
+            "bank" => $bank,
             "data" => $result
         ]);
     }
@@ -65,13 +66,16 @@ class CurrencyController extends Controller
         }
 
         return response()->json([
-            "fromCache" => $from_cache,
+            "cache" => $from_cache,
+            "bank" => $bank,
             "data" => [
-                "related" => $date,
-                "from" => $currency,
-                "amount" => $amount,
-                "to" => $target_currency,
-                "result" => $result
+                "converted" => [
+                    "related" => $date,
+                    "from" => $currency,
+                    "amount" => $amount,
+                    "to" => $target_currency,
+                    "result" => $result
+                ]
             ]
         ]);
     }
