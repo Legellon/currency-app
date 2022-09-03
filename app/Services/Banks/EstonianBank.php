@@ -8,24 +8,24 @@ final class EstonianBank extends Bank
 {
     public static string $alias = "estonian_bank";
 
-    private static string $currency_source_link;
+    private static string $currencies_source_link;
 
     public function __construct()
     {
         parent::__construct(self::$alias);
-        self::$currency_source_link = env('BANK_ESTONIAN_CURRENCY_URL');
+        self::$currencies_source_link = env('BANK_ESTONIAN_CURRENCIES_URL');
     }
 
     public function getJsonCurrenciesTable(string $date): array
     {
-        $xml_response = Http::get(self::$currency_source_link . "&imported=$date");
+        $xml_response = Http::get(self::$currencies_source_link . "&imported=$date");
 
         $xml_string = simplexml_load_string($xml_response);
         $xml_to_json = json_decode(json_encode($xml_string), true);
 
-        $currency_table = self::prettifyJsonCurrencyTable($xml_to_json);
+        $currencies_table = self::prettifyJsonCurrencyTable($xml_to_json);
 
-        return $currency_table['currencies'] ? [$currency_table['currencies'], false] : [null, true];
+        return $currencies_table['currencies'] ? [$currencies_table['currencies'], false] : [null, true];
     }
 
     /**
