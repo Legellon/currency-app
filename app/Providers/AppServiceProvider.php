@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\Banks\EstonianBank;
+use App\Services\Banks\LithuanianBank;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
