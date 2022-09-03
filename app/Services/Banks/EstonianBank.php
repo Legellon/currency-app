@@ -78,7 +78,11 @@ final class EstonianBank extends Bank
             }
             else
             {
-                $json[$key] = $value;
+                $json[$key] = match ($key)
+                {
+                    "rate" => floatval($value),
+                    default => $value
+                };
             }
         }
 

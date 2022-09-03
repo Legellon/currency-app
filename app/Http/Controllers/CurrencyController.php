@@ -11,6 +11,7 @@ use Illuminate\Routing\Controller;
 class CurrencyController extends Controller
 {
     //TODO: add validation
+    //TODO: improve error handling
     public function getTable(Request $request): JsonResponse
     {
         $bank = $request->query('bank', EstonianBank::$alias);
@@ -39,6 +40,7 @@ class CurrencyController extends Controller
     }
 
     //TODO: add validation
+    //TODO: improve error handling
     public function convert(Request $request, $currency = "USD"): JsonResponse
     {
         $target_currency = $request->query('to', "USD");
@@ -72,7 +74,7 @@ class CurrencyController extends Controller
                 "converted" => [
                     "related" => $date,
                     "from" => $currency,
-                    "amount" => $amount,
+                    "amount" => floatval($amount),
                     "to" => $target_currency,
                     "result" => $result
                 ]

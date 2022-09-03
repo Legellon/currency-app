@@ -47,7 +47,7 @@ final class LithuanianBank extends Bank
         {
             array_push($currencies, [
                 "currency" => $value[1],
-                "rate" => $value[2]
+                "rate" => floatval($value[2])
             ]);
         }
 
