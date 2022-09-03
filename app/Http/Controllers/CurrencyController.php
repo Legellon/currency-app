@@ -19,9 +19,10 @@ class CurrencyController extends Controller
 
         $source = BankFactory::getBankOrDefault($bank);
 
-        [[$result, $err], $from_cache] = $source->getJsonCurrencyTable($date);
+        [[$result, $err], $from_cache] = $source->getJsonCurrenciesTableCached($date);
 
-        if ($err) {
+        if ($err)
+        {
             return response()->json([
                 "error" => [
                     "code" => "currencies.1",
@@ -56,7 +57,8 @@ class CurrencyController extends Controller
             floatval($amount),
             $date);
 
-        if ($err) {
+        if ($err)
+        {
             return response()->json([
                 "error" => [
                     "code" => "convert.1",

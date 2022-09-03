@@ -2,13 +2,30 @@
 
 namespace App\Services\Banks;
 
+use function App\Utils\Cache\getCachedOrCacheJsonFromRedis;
+
 abstract class Bank implements CurrencyCalculator
 {
     use HasAlias;
 
+    protected static string $currency_table_cache_key;
+
+    public function __construct(string $alias)
+    {
+        self::$currency_table_cache_key = $alias . ":currency_table";
+    }
+
+    public function getJsonCurrenciesTableCached(string $date): array
+    {
+        return getCachedOrCacheJsonFromRedis(
+            self::$currency_table_cache_key . ":$date",
+            1000,
+            fn() => $this->getJsonCurrenciesTable($date));
+    }
+
     public function convert(string $from, string $to, float $amount, string $date): array
     {
-        [[$currency_table, $err], $from_cache] = $this->getJsonCurrencyTable($date);
+        [[$currency_table, $err], $from_cache] = $this->getJsonCurrenciesTableCached($date);
 
         if ($err)
         {
