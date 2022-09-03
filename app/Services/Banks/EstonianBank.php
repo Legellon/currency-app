@@ -25,7 +25,11 @@ final class EstonianBank extends Bank
 
         $currencies_table = self::prettifyJsonCurrencyTable($xml_to_json);
 
-        return $currencies_table['currencies'] ? [$currencies_table['currencies'], false] : [null, true];
+        return match (array_key_exists('currencies', $currencies_table))
+        {
+            true  => [$currencies_table['currencies'], false],
+            false => [null, true]
+        };
     }
 
     /**

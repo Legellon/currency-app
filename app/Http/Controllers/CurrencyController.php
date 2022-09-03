@@ -21,17 +21,14 @@ class CurrencyController extends Controller
 
         [[$result, $err], $from_cache] = $source->getJsonCurrenciesTableCached($date);
 
-        if ($err)
-        {
-            return response()->json([
-                "error" => [
-                    "code" => "currencies.1",
-                    "message" =>
-                        "Error occurred due to the wrong json structure. ".
-                        "Most likely date is wrong or something happened with external source."
-                ],
-            ]);
-        }
+        if ($err) return response()->json([
+            "error" => [
+                "code" => "currencies.1",
+                "message" =>
+                    "Error occurred due to the wrong json structure. ".
+                    "Most likely date is wrong or something happened with external source."
+            ]
+        ]);
 
         return response()->json([
             "cache" => $from_cache,
@@ -57,17 +54,14 @@ class CurrencyController extends Controller
             floatval($amount),
             $date);
 
-        if ($err)
-        {
-            return response()->json([
-                "error" => [
-                    "code" => "convert.1",
-                    "message" =>
-                        "Error occurred while processing currencies rates from the table ".
-                        "Most likely one of the currencies is missing or has invalid alias."
-                ]
-            ]);
-        }
+        if ($err) return response()->json([
+            "error" => [
+                "code" => "convert.1",
+                "message" =>
+                    "Error occurred while processing currencies rates from the table ".
+                    "Most likely one of the currencies is missing or has invalid alias."
+            ]
+        ]);
 
         return response()->json([
             "cache" => $from_cache,
